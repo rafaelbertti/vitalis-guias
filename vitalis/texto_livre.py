@@ -1,9 +1,11 @@
 """Leitura do texto livre da recepção (``observacao_recepcao``).
 
-Política: o motor só entende o que está listado aqui. Observações benignas conhecidas não geram
-nada; os padrões de ação geram motivos; **qualquer outro texto** vira ``OBSERVACAO_NAO_INTERPRETADA``
-(corrigir), porque liberar uma guia com uma observação que ninguém leu é exatamente o erro que
-a clínica quer parar de cometer. Não há LLM aqui: cada padrão é uma expressão regular com teste.
+Política: o motor só entende o que está listado aqui, **frase por frase**. Cada frase (separada por
+ponto ou ponto e vírgula) precisa ser coberta por algo desta lista: uma observação benigna conhecida,
+um complemento reconhecido ou um padrão de ação. Frase que sobra sem cobertura vira
+``OBSERVACAO_NAO_INTERPRETADA`` (corrigir), porque liberar uma guia com uma observação que ninguém
+leu é exatamente o erro que a clínica quer parar de cometer. Não há LLM aqui: cada padrão é uma
+expressão regular com teste.
 """
 
 from __future__ import annotations
@@ -18,12 +20,18 @@ def _sem_acento(s: str) -> str:
     return "".join(c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn").lower()
 
 
-# Observações que aparecem no dia a dia e não mudam a conferência.
+# Frases do dia a dia que não mudam a conferência.
 BENIGNAS = [
     r"paciente chegou \d+ min atrasad",
     r"confirmado pelo whatsapp",
     r"pediu recibo para reembolso",
     r"trouxe exame novo",
+]
+
+# Frases que só complementam um padrão de ação (ex.: "Validade 30/09." depois de "autorização nova").
+COMPLEMENTOS = [
+    r"^validade \d{1,2}/\d{1,2}(/\d{2,4})?$",
+    r"^aguardando numero$",
 ]
 
 # Padrões de ação: (codigo, regex, gravidade, mensagem, correcao, encaminhamento)
@@ -63,31 +71,42 @@ PADROES = [
 _NEGACAO = re.compile(r"\bnao\b")
 
 
-def _negado(texto: str, inicio: int) -> bool:
-    """True se há um 'não' logo antes do trecho casado, na mesma oração (ex.: 'não trouxe autorização nova')."""
-    oracao = re.split(r"[.;]", texto[:inicio])[-1]
-    return bool(_NEGACAO.search(oracao[-40:]))
+def _negado(frase: str, inicio: int) -> bool:
+    """True se há um 'não' logo antes do trecho casado (ex.: 'não trouxe autorização nova')."""
+    return bool(_NEGACAO.search(frase[max(0, inicio - 40):inicio]))
+
+
+def _frases(texto: str) -> list[str]:
+    return [f.strip(" ,") for f in re.split(r"[.;]", texto) if f.strip(" ,")]
 
 
 def interpretar_observacao(texto: str | None) -> list[Motivo]:
     if not texto or not texto.strip():
         return []
     original = texto.strip()
-    t = _sem_acento(original)
-
-    if any(re.search(p, t) for p in BENIGNAS):
-        return []
-
     motivos: list[Motivo] = []
-    for codigo, regex, gravidade, mensagem, correcao, encaminhamento in PADROES:
-        m = re.search(regex, t)
-        if m and not _negado(t, m.start()):
-            motivos.append(Motivo(codigo, gravidade, mensagem, campo="observacao_recepcao",
-                                  valor=original, correcao=correcao, encaminhamento=encaminhamento))
+    vistos: set[str] = set()
+    sobrou: list[str] = []
 
-    if not motivos:
+    for frase in _frases(_sem_acento(original)):
+        if any(re.search(p, frase) for p in BENIGNAS) or any(re.search(p, frase) for p in COMPLEMENTOS):
+            continue
+        casou = False
+        for codigo, regex, gravidade, mensagem, correcao, encaminhamento in PADROES:
+            m = re.search(regex, frase)
+            if m and not _negado(frase, m.start()):
+                casou = True
+                if codigo not in vistos:
+                    vistos.add(codigo)
+                    motivos.append(Motivo(codigo, gravidade, mensagem, campo="observacao_recepcao",
+                                          valor=original, correcao=correcao, encaminhamento=encaminhamento))
+        if not casou:
+            sobrou.append(frase)
+
+    if sobrou:
         motivos.append(Motivo("OBSERVACAO_NAO_INTERPRETADA", "corrigir",
-                              "A recepção escreveu algo que o sistema não sabe interpretar; alguém precisa ler",
+                              "A recepção escreveu algo que o sistema não sabe interpretar; alguém precisa ler: "
+                              + "; ".join(f'"{f}"' for f in sobrou),
                               campo="observacao_recepcao", valor=original,
                               correcao="Ler a observação e decidir manualmente"))
     return motivos

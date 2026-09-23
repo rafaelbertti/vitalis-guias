@@ -88,7 +88,16 @@ Regras do contrato:
   que a conferência acontece. Padrão: a **data de lançamento** da guia, que é como a clínica confere o lote
   (esclarecimento do avaliador). Para simular "e se eu enviar hoje?", passe a data de hoje: o prazo de envio
   é reavaliado e, vencido, bloqueia.
+  Na página, o seletor "Conferir com a data de" faz a mesma coisa (lançamento ou hoje).
 - A guia nova é comparada com o lote de agosto para **possível duplicidade** e **não é gravada** (ver "O que ficou de fora").
+- Campos necessários à conferência (paciente, convênio, procedimento, datas, validade, sessão/limite, valor) vazios
+  viram `CAMPO_NECESSARIO_VAZIO`; os exigidos por convênio (CID, carteirinha, registro, nº de autorização), `CAMPO_OBRIGATORIO_VAZIO`.
+- Observação da recepção é lida **frase por frase**: frase benigna conhecida não gera nada, frase com padrão de ação gera o
+  motivo, e frase que sobra sem interpretação vira `OBSERVACAO_NAO_INTERPRETADA` (corrigir). Uma frase boa não esconde uma ruim.
+- No lote (`/api/verificar-lote`), `id_guia` repetido é rejeitado com `400`: repetição de ID é erro de entrada;
+  "possível duplicidade" é entre IDs diferentes com a mesma sessão.
+- No relatório, "por tipo de problema" conta **guias** (cada código uma vez por guia); "pendente no convênio" exclui o que foi
+  encaminhado a particular; a possível duplicidade está **dentro** do pendente, não é uma terceira parcela.
 
 Outras rotas: `GET /api/guias` (as 80 verificadas), `GET /api/relatorio` e `/api/relatorio.md`,
 `GET /api/regras?convenio=Plano%20Bem&procedimento=20103301`, `GET /api/saude`, `GET /docs` (OpenAPI).

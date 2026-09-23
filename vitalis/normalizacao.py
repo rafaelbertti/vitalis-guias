@@ -74,7 +74,10 @@ def normalizar_valor(texto: Optional[str]) -> tuple[Optional[Decimal], Optional[
         s = s.replace(".", "").replace(",", ".")
         normalizada = True
     try:
-        v = Decimal(s).quantize(Decimal("0.01"))
+        v = Decimal(s)
+        if not v.is_finite():          # "NaN", "Infinity" são Decimals válidos, mas não são valores
+            return None, "invalida"
+        v = v.quantize(Decimal("0.01"))
     except InvalidOperation:
         return None, "invalida"
     if v < 0:

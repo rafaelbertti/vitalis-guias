@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-09-23T00:21",
+  "gerado_em": "2026-09-23T01:08",
   "referencia": "conferência na data de lançamento de cada guia",
   "total_verificadas": 80,
   "com_problema": 34,
@@ -93,19 +93,22 @@
       "ok": 17,
       "corrigir": 5,
       "nao_enviar": 5,
-      "valor_pendente": "750.00"
+      "valor_pendente": "750.00",
+      "valor_particular": "0"
     },
     "Norte": {
       "ok": 16,
       "corrigir": 2,
       "nao_enviar": 12,
-      "valor_pendente": "1038.00"
+      "valor_pendente": "796.00",
+      "valor_particular": "242.00"
     },
     "Sul": {
       "ok": 13,
       "corrigir": 4,
       "nao_enviar": 6,
-      "valor_pendente": "744.00"
+      "valor_pendente": "654.00",
+      "valor_particular": "90.00"
     }
   },
   "por_convenio": {
@@ -113,19 +116,22 @@
       "ok": 8,
       "corrigir": 1,
       "nao_enviar": 6,
-      "valor_pendente": "526.00"
+      "valor_pendente": "256.00",
+      "valor_particular": "270.00"
     },
     "Saúde Interior": {
       "ok": 16,
       "corrigir": 3,
       "nao_enviar": 6,
-      "valor_pendente": "558.00"
+      "valor_pendente": "558.00",
+      "valor_particular": "0"
     },
     "Vitalcard": {
       "ok": 22,
       "corrigir": 7,
       "nao_enviar": 11,
-      "valor_pendente": "1448.00"
+      "valor_pendente": "1386.00",
+      "valor_particular": "62.00"
     }
   },
   "acoes": [

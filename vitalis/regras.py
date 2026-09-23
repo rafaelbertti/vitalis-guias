@@ -58,7 +58,25 @@ class Contexto:
 
 # ----------------------------------------------------------------------------- regras
 
+# Sem estes campos não dá para verificar nada (validade, prazo, limite, valor, de quem é a guia).
+# Os campos que variam por convênio (CID, carteirinha, registro, nº de autorização) ficam em
+# regra_campos_obrigatorios.
+CAMPOS_NECESSARIOS = [
+    "unidade", "paciente", "convenio", "procedimento_codigo", "data_atendimento", "data_lancamento",
+    "autorizacao_validade", "autorizacao_sessoes_limite", "sessao_numero_na_autorizacao", "valor",
+]
+
+
+def regra_campos_necessarios(g: dict, ctx: Contexto) -> list[Motivo]:
+    return [Motivo("CAMPO_NECESSARIO_VAZIO", "corrigir",
+                   f"Sem '{campo}' não é possível conferir a guia",
+                   campo=campo, valor="", correcao=f"Preencher '{campo}'")
+            for campo in CAMPOS_NECESSARIOS if not g.get(campo, "").strip()]
+
+
 def regra_convenio_conhecido(g: dict, ctx: Contexto) -> list[Motivo]:
+    if not g["convenio"]:
+        return []  # já apontado em regra_campos_necessarios
     if ctx.convenio is None:
         nomes = ", ".join(ctx.regras["_convenios"])
         return [Motivo("CONVENIO_DESCONHECIDO", "corrigir",
@@ -68,6 +86,8 @@ def regra_convenio_conhecido(g: dict, ctx: Contexto) -> list[Motivo]:
 
 
 def regra_procedimento_conhecido(g: dict, ctx: Contexto) -> list[Motivo]:
+    if not g["procedimento_codigo"]:
+        return []  # já apontado em regra_campos_necessarios
     if ctx.procedimento is None:
         return [Motivo("PROCEDIMENTO_DESCONHECIDO", "corrigir",
                        f"Procedimento '{g['procedimento_codigo']}' não está na tabela de procedimentos",
@@ -227,6 +247,7 @@ def regra_duplicidade(g: dict, ctx: Contexto) -> list[Motivo]:
 
 
 REGRAS: list[Callable[[dict, Contexto], list[Motivo]]] = [
+    regra_campos_necessarios,
     regra_convenio_conhecido,
     regra_procedimento_conhecido,
     regra_campos_obrigatorios,

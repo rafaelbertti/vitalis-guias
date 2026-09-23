@@ -29,8 +29,10 @@ def _brl(v: Decimal) -> str:
     return "R$ " + s.replace(",", "X").replace(".", ",").replace("X", ".")
 
 
-def montar_relatorio(resultados: list[dict], guias: list[dict], gerado_em: datetime | None = None) -> dict:
-    """Cada guia entra uma única vez na sua categoria; motivos podem se sobrepor (uma guia, vários motivos)."""
+def montar_relatorio(resultados: list[dict], guias: list[dict], gerado_em: datetime | None = None,
+                     data_referencia: date | None = None) -> dict:
+    """Cada guia entra uma única vez na sua categoria. Em "por motivo", cada código conta uma vez por guia
+    (uma guia com dois campos vazios é 1 em CAMPO_OBRIGATORIO_VAZIO); uma guia pode aparecer em vários códigos."""
     gerado_em = gerado_em or datetime.now()
     por_id = {g["id_guia"]: g for g in guias}
     total = len(resultados)
@@ -41,8 +43,10 @@ def montar_relatorio(resultados: list[dict], guias: list[dict], gerado_em: datet
     excesso_duplicidade = Decimal("0")
     por_motivo: Counter = Counter()
     avisos: Counter = Counter()
-    por_unidade: dict = defaultdict(lambda: {"ok": 0, "corrigir": 0, "nao_enviar": 0, "valor_pendente": Decimal("0")})
-    por_convenio: dict = defaultdict(lambda: {"ok": 0, "corrigir": 0, "nao_enviar": 0, "valor_pendente": Decimal("0")})
+    def _grupo():
+        return {"ok": 0, "corrigir": 0, "nao_enviar": 0, "valor_pendente": Decimal("0"), "valor_particular": Decimal("0")}
+    por_unidade: dict = defaultdict(_grupo)
+    por_convenio: dict = defaultdict(_grupo)
     acoes = []
 
     for r in resultados:
@@ -57,14 +61,17 @@ def montar_relatorio(resultados: list[dict], guias: list[dict], gerado_em: datet
         codigos = {m["codigo"] for m in r["motivos"]}
         if "POSSIVEL_DUPLICIDADE" in codigos:
             excesso_duplicidade += valor
-        for m in r["motivos"]:
-            if m["gravidade"] in ("bloqueia", "corrigir"):
-                por_motivo[m["codigo"]] += 1
-            else:
-                avisos[m["codigo"]] += 1
+        graves = {m["codigo"] for m in r["motivos"] if m["gravidade"] in ("bloqueia", "corrigir")}
+        for codigo in graves:
+            por_motivo[codigo] += 1
+        for codigo in codigos - graves:
+            avisos[codigo] += 1
+        particular = r["encaminhamento"] == "particular"
         for chave, agrupador in ((g.get("unidade", "?"), por_unidade), (g.get("convenio", "?"), por_convenio)):
             agrupador[chave][d] += 1
-            if d != "ok":
+            if particular:
+                agrupador[chave]["valor_particular"] += valor
+            elif d != "ok":
                 agrupador[chave]["valor_pendente"] += valor
         if d != "ok":
             acoes.append({
@@ -80,7 +87,8 @@ def montar_relatorio(resultados: list[dict], guias: list[dict], gerado_em: datet
 
     return {
         "gerado_em": gerado_em.isoformat(timespec="minutes"),
-        "referencia": "conferência na data de lançamento de cada guia",
+        "referencia": (f"conferência na data {data_referencia.isoformat()}" if data_referencia
+                       else "conferência na data de lançamento de cada guia"),
         "total_verificadas": total,
         "com_problema": com_problema,
         "por_decisao": {d: {"rotulo": ROTULO[d], "guias": v["guias"], "valor": str(v["valor"])} for d, v in por_decisao.items()},
@@ -95,8 +103,10 @@ def montar_relatorio(resultados: list[dict], guias: list[dict], gerado_em: datet
         },
         "por_motivo": [{"codigo": c, "guias": n} for c, n in por_motivo.most_common()],
         "avisos": [{"codigo": c, "guias": n} for c, n in avisos.most_common()],
-        "por_unidade": {u: {**v, "valor_pendente": str(v["valor_pendente"])} for u, v in sorted(por_unidade.items())},
-        "por_convenio": {c: {**v, "valor_pendente": str(v["valor_pendente"])} for c, v in sorted(por_convenio.items())},
+        "por_unidade": {u: {**v, "valor_pendente": str(v["valor_pendente"]), "valor_particular": str(v["valor_particular"])}
+                        for u, v in sorted(por_unidade.items())},
+        "por_convenio": {c: {**v, "valor_pendente": str(v["valor_pendente"]), "valor_particular": str(v["valor_particular"])}
+                         for c, v in sorted(por_convenio.items())},
         "acoes": sorted(acoes, key=lambda a: (a["decisao"] != "nao_enviar", a["id_guia"])),
     }
 
@@ -119,8 +129,8 @@ def relatorio_markdown(rel: dict) -> str:
     L.append(f"- **Pendente no convênio:** {_brl(_dec(din['pendente_no_convenio']))} — {din['explicacao_pendente']}.")
     L.append(f"- **Encaminhado para particular:** {_brl(_dec(din['encaminhado_particular']))} em {din['guias_particular']} guia(s) "
              f"(não é perda: é cobrança por outro caminho).")
-    L.append(f"- **Possível duplicidade:** {_brl(_dec(din['excesso_possivel_duplicidade']))} lançados em guias que repetem "
-             f"outra já lançada; se confirmado, é excesso a cancelar.\n")
+    L.append(f"- **Possível duplicidade:** dos quais {_brl(_dec(din['excesso_possivel_duplicidade']))} estão em guias que repetem "
+             f"outra já lançada (já contados no pendente acima); se confirmado, é excesso a cancelar, não a corrigir.\n")
     L.append("## Por tipo de problema\n")
     L.append("| Motivo | Guias |\n|---|---:|")
     for m in rel["por_motivo"]:
@@ -130,9 +140,9 @@ def relatorio_markdown(rel: dict) -> str:
         L.append("Avisos que não mudam a decisão: " + ", ".join(f"{a['codigo']} ({a['guias']})" for a in rel["avisos"]) + "\n")
     for titulo, chave in (("Por unidade", "por_unidade"), ("Por convênio", "por_convenio")):
         L.append(f"## {titulo}\n")
-        L.append("| | OK | Corrigir | Não enviar | Valor pendente |\n|---|---:|---:|---:|---:|")
+        L.append("| | OK | Corrigir | Não enviar | Pendente no convênio | Particular |\n|---|---:|---:|---:|---:|---:|")
         for nome, v in rel[chave].items():
-            L.append(f"| {nome} | {v['ok']} | {v['corrigir']} | {v['nao_enviar']} | {_brl(_dec(v['valor_pendente']))} |")
+            L.append(f"| {nome} | {v['ok']} | {v['corrigir']} | {v['nao_enviar']} | {_brl(_dec(v['valor_pendente']))} | {_brl(_dec(v['valor_particular']))} |")
         L.append("")
     L.append("## O que fazer esta semana\n")
     L.append("| Guia | Unidade | Convênio | Valor | Situação | Motivos | O que fazer |\n|---|---|---|---:|---|---|---|")
@@ -150,9 +160,7 @@ def gerar(caminho_csv=None, data_referencia: date | None = None) -> tuple[dict, 
     regras = carregar_regras()
     guias = carregar_guias(caminho_csv)
     resultados = verificar_lote(guias, regras, data_referencia=data_referencia)
-    rel = montar_relatorio(resultados, guias)
-    if data_referencia:
-        rel["referencia"] = f"conferência na data {data_referencia.isoformat()}"
+    rel = montar_relatorio(resultados, guias, data_referencia=data_referencia)
     return rel, relatorio_markdown(rel)
 
 

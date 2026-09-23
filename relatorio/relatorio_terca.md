@@ -1,6 +1,6 @@
 # Relatório de terça — conferência de guias de convênio
 
-Gerado em 2026-09-23 00:21 · conferência na data de lançamento de cada guia
+Gerado em 2026-09-23 01:08 · conferência na data de lançamento de cada guia
 
 ## Em uma linha
 
@@ -19,7 +19,7 @@ Gerado em 2026-09-23 00:21 · conferência na data de lançamento de cada guia
 
 - **Pendente no convênio:** R$ 2.200,00 — soma das guias em 'corrigir' e 'não enviar' que seguem no convênio; não é glosa confirmada, é o que não deve ser enviado como está.
 - **Encaminhado para particular:** R$ 332,00 em 4 guia(s) (não é perda: é cobrança por outro caminho).
-- **Possível duplicidade:** R$ 160,00 lançados em guias que repetem outra já lançada; se confirmado, é excesso a cancelar.
+- **Possível duplicidade:** dos quais R$ 160,00 estão em guias que repetem outra já lançada (já contados no pendente acima); se confirmado, é excesso a cancelar, não a corrigir.
 
 ## Por tipo de problema
 
@@ -42,19 +42,19 @@ Avisos que não mudam a decisão: DATA_NORMALIZADA (2), TEM_POSSIVEL_DUPLICATA (
 
 ## Por unidade
 
-| | OK | Corrigir | Não enviar | Valor pendente |
-|---|---:|---:|---:|---:|
-| Centro | 17 | 5 | 5 | R$ 750,00 |
-| Norte | 16 | 2 | 12 | R$ 1.038,00 |
-| Sul | 13 | 4 | 6 | R$ 744,00 |
+| | OK | Corrigir | Não enviar | Pendente no convênio | Particular |
+|---|---:|---:|---:|---:|---:|
+| Centro | 17 | 5 | 5 | R$ 750,00 | R$ 0,00 |
+| Norte | 16 | 2 | 12 | R$ 796,00 | R$ 242,00 |
+| Sul | 13 | 4 | 6 | R$ 654,00 | R$ 90,00 |
 
 ## Por convênio
 
-| | OK | Corrigir | Não enviar | Valor pendente |
-|---|---:|---:|---:|---:|
-| Plano Bem | 8 | 1 | 6 | R$ 526,00 |
-| Saúde Interior | 16 | 3 | 6 | R$ 558,00 |
-| Vitalcard | 22 | 7 | 11 | R$ 1.448,00 |
+| | OK | Corrigir | Não enviar | Pendente no convênio | Particular |
+|---|---:|---:|---:|---:|---:|
+| Plano Bem | 8 | 1 | 6 | R$ 256,00 | R$ 270,00 |
+| Saúde Interior | 16 | 3 | 6 | R$ 558,00 | R$ 0,00 |
+| Vitalcard | 22 | 7 | 11 | R$ 1.386,00 | R$ 62,00 |
 
 ## O que fazer esta semana
 

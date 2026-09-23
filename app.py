@@ -36,8 +36,10 @@ REGRAS = carregar_regras()
 GUIAS = carregar_guias()
 
 
-def _data_referencia(texto: str | None) -> date | None:
+def _data_referencia(texto: Any) -> date | None:
     """Query/body -> date. Sem valor: usa DATA_REFERENCIA do ambiente, se houver; senão None (= lançamento)."""
+    if texto is not None and not isinstance(texto, str):
+        raise HTTPException(400, f"data_referencia precisa ser texto AAAA-MM-DD, veio {type(texto).__name__}")
     texto = texto or os.environ.get("DATA_REFERENCIA") or ""
     if not texto.strip():
         return None
@@ -76,10 +78,7 @@ def guias(data_referencia: str | None = Query(None, description="AAAA-MM-DD; pad
 @app.get("/api/relatorio")
 def relatorio(data_referencia: str | None = None):
     dref = _data_referencia(data_referencia)
-    rel = montar_relatorio(verificar_lote(GUIAS, REGRAS, data_referencia=dref), GUIAS)
-    if dref:
-        rel["referencia"] = f"conferência na data {dref.isoformat()}"
-    return rel
+    return montar_relatorio(verificar_lote(GUIAS, REGRAS, data_referencia=dref), GUIAS, data_referencia=dref)
 
 
 @app.get("/api/relatorio.md", response_class=PlainTextResponse)
@@ -119,8 +118,11 @@ def _extrair_guia(corpo: Any) -> tuple[dict, str | None]:
     if desconhecidas:
         raise HTTPException(400, {"erro": "colunas desconhecidas", "colunas": desconhecidas,
                                   "aceitas": COLUNAS})
-    if not str(corpo.get("id_guia", "")).strip():
-        raise HTTPException(400, "id_guia é obrigatório")
+    if not isinstance(corpo.get("id_guia"), str) or not corpo["id_guia"].strip():
+        raise HTTPException(400, "id_guia é obrigatório e precisa ser texto não vazio")
+    nao_escalares = sorted(c for c in COLUNAS if not isinstance(corpo.get(c), (str, int, float, type(None))))
+    if nao_escalares:
+        raise HTTPException(400, {"erro": "cada coluna precisa ser texto, número ou nulo", "colunas": nao_escalares})
     guia = {c: ("" if corpo.get(c) is None else str(corpo.get(c))) for c in COLUNAS}
     return guia, dref
 
@@ -152,4 +154,5 @@ async def verificar_lote_csv(request: Request, data_referencia: str | None = Non
         raise HTTPException(400, "o CSV não tem nenhuma linha de guia")
     dref = _data_referencia(data_referencia)
     resultados = verificar_lote(guias, REGRAS, data_referencia=dref)
-    return {"total": len(resultados), "resultados": resultados, "relatorio": montar_relatorio(resultados, guias)}
+    return {"total": len(resultados), "resultados": resultados,
+            "relatorio": montar_relatorio(resultados, guias, data_referencia=dref)}

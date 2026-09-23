@@ -24,10 +24,17 @@ def ler_csv(texto: str) -> list[dict]:
     if faltando:
         raise ValueError(f"CSV sem as colunas obrigatórias: {', '.join(faltando)}")
     guias = []
+    vistos: set[str] = set()
     for linha in leitor:
         if not any((v or "").strip() for v in linha.values()):
             continue
-        guias.append({c: (linha.get(c) or "").strip() for c in COLUNAS})
+        g = {c: (linha.get(c) or "").strip() for c in COLUNAS}
+        # Política de unicidade: um id_guia por lote. Repetido é erro de entrada, não "possível duplicidade"
+        # (que é entre ids diferentes). Quem quiser reprocessar manda a guia sozinha em /api/verificar.
+        if g["id_guia"] in vistos:
+            raise ValueError(f"id_guia repetido no lote: {g['id_guia']}")
+        vistos.add(g["id_guia"])
+        guias.append(g)
     return guias
 
 

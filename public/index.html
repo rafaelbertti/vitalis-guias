@@ -64,7 +64,7 @@
     </div>
     <div>
       <h3 class="muted" style="margin:6px 0">Por unidade e convênio</h3>
-      <table id="tab-grupos"><thead><tr><th></th><th>OK</th><th>Corrigir</th><th>Não enviar</th><th>Pendente</th></tr></thead><tbody></tbody></table>
+      <table id="tab-grupos"><thead><tr><th></th><th>OK</th><th>Corrigir</th><th>Não enviar</th><th>Pendente no convênio</th><th>Particular</th></tr></thead><tbody></tbody></table>
     </div>
   </div>
   <p class="muted" id="rel-nota"></p>
@@ -90,6 +90,14 @@
   <h2>Guia nova: entra aqui e a decisão sai</h2>
   <p class="muted">Preencha como a recepção lança no sistema. O mesmo caminho existe por API: <code>POST /api/verificar</code> com estas colunas em JSON (veja o README). A guia é comparada com o lote de agosto para duplicidade e não é gravada.</p>
   <form id="form-guia"></form>
+  <p style="margin:10px 0 0">
+    <label class="muted">Conferir com a data de:
+      <select name="modo_referencia" id="modo_referencia">
+        <option value="lancamento">lançamento da guia (como a clínica confere o lote)</option>
+        <option value="hoje">hoje (simular "e se eu enviar agora?" — o prazo de envio é reavaliado)</option>
+      </select>
+    </label>
+  </p>
   <p style="margin:10px 0 0">
     <button type="submit" form="form-guia">Verificar guia</button>
     <button type="button" class="sec" id="btn-exemplo">Preencher exemplo</button>
@@ -144,11 +152,11 @@ async function carregarRelatorio() {
     <div class="card nao_enviar"><b>${d.nao_enviar.guias}</b><span>não enviar · ${brl(d.nao_enviar.valor)}</span></div>
     <div class="card nao_enviar"><b>${brl(din.pendente_no_convenio)}</b><span>pendente no convênio (não enviar como está)</span></div>
     <div class="card"><b>${brl(din.encaminhado_particular)}</b><span>encaminhado para particular (${din.guias_particular})</span></div>
-    <div class="card"><b>${brl(din.excesso_possivel_duplicidade)}</b><span>possível duplicidade</span></div>`;
+    <div class="card"><b>${brl(din.excesso_possivel_duplicidade)}</b><span>dos quais em possível duplicidade (já no pendente)</span></div>`;
   document.querySelector("#tab-motivos tbody").innerHTML = rel.por_motivo.map(m => `<tr><td><code>${m.codigo}</code></td><td>${m.guias}</td></tr>`).join("");
   const linhas = [];
-  for (const [nome, v] of Object.entries(rel.por_unidade)) linhas.push(`<tr><td>Unidade ${esc(nome)}</td><td>${v.ok}</td><td>${v.corrigir}</td><td>${v.nao_enviar}</td><td>${brl(v.valor_pendente)}</td></tr>`);
-  for (const [nome, v] of Object.entries(rel.por_convenio)) linhas.push(`<tr><td>${esc(nome)}</td><td>${v.ok}</td><td>${v.corrigir}</td><td>${v.nao_enviar}</td><td>${brl(v.valor_pendente)}</td></tr>`);
+  for (const [nome, v] of Object.entries(rel.por_unidade)) linhas.push(`<tr><td>Unidade ${esc(nome)}</td><td>${v.ok}</td><td>${v.corrigir}</td><td>${v.nao_enviar}</td><td>${brl(v.valor_pendente)}</td><td>${brl(v.valor_particular)}</td></tr>`);
+  for (const [nome, v] of Object.entries(rel.por_convenio)) linhas.push(`<tr><td>${esc(nome)}</td><td>${v.ok}</td><td>${v.corrigir}</td><td>${v.nao_enviar}</td><td>${brl(v.valor_pendente)}</td><td>${brl(v.valor_particular)}</td></tr>`);
   document.querySelector("#tab-grupos tbody").innerHTML = linhas.join("");
   document.getElementById("rel-nota").textContent = `Gerado em ${rel.gerado_em.replace("T"," ")} · ${rel.referencia}. "Pendente" não é glosa confirmada: é o que não deve ser enviado como está.`;
 }
@@ -192,7 +200,9 @@ form.addEventListener("submit", async ev => {
   const guia = {}; for (const c of COLUNAS) guia[c] = form.elements[c].value;
   const alvo = document.getElementById("res-guia");
   alvo.innerHTML = `<p class="muted">verificando…</p>`;
-  try { const r = await api("/api/verificar", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(guia)});
+  const hoje = new Date().toISOString().slice(0, 10);
+  const corpo = document.getElementById("modo_referencia").value === "hoje" ? {guia, data_referencia: hoje} : guia;
+  try { const r = await api("/api/verificar", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(corpo)});
         alvo.innerHTML = resultadoHtml(r) + `<details><summary class="muted">resposta JSON</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details>`; }
   catch (e) { alvo.innerHTML = `<div class="resultado nao_enviar">Erro: ${esc(e.message)}</div>`; }
 });
