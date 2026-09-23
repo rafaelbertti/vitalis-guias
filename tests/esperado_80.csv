@@ -1,0 +1,81 @@
+id_guia,decisao,encaminhamento,motivos_principais,por_que
+G-2608-0001,ok,convenio,,
+G-2608-0002,nao_enviar,particular,CONSULTA_FATURADA_PARTICULAR,Plano Bem nao cobre consulta; regra do convenio manda faturar particular
+G-2608-0003,ok,convenio,,
+G-2608-0004,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 04/08 < atendimento 18/08
+G-2608-0005,ok,convenio,,sessao 10 de 10 (no limite)
+G-2608-0006,nao_enviar,convenio,PROCEDIMENTO_NAO_COBERTO;SESSAO_ACIMA_LIMITE,Vitalcard nao cobre infiltracao; sessao 15 de 10
+G-2608-0007,nao_enviar,convenio,PROCEDIMENTO_NAO_COBERTO,Vitalcard nao cobre infiltracao
+G-2608-0008,nao_enviar,convenio,SESSAO_ACIMA_LIMITE,sessao 13 de 10
+G-2608-0009,ok,convenio,,Saude Interior nao exige CID
+G-2608-0010,ok,convenio,,
+G-2608-0011,ok,convenio,,
+G-2608-0012,ok,convenio,,
+G-2608-0013,corrigir,convenio,CAMPO_OBRIGATORIO_VAZIO,sem registro profissional
+G-2608-0014,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 27/07 < atendimento 17/08
+G-2608-0015,ok,convenio,,
+G-2608-0016,ok,convenio,DATA_NORMALIZADA,data 03/08/2026 lida como 2026-08-03; resto ok
+G-2608-0017,ok,convenio,,
+G-2608-0018,ok,convenio,,
+G-2608-0019,ok,convenio,,
+G-2608-0020,ok,convenio,,validade no proprio dia do atendimento (inclusive)
+G-2608-0021,corrigir,convenio,CAMPO_OBRIGATORIO_VAZIO,Vitalcard exige CID
+G-2608-0022,ok,convenio,,
+G-2608-0023,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 25/07 < atendimento 17/08
+G-2608-0024,nao_enviar,particular,CONSULTA_FATURADA_PARTICULAR,Plano Bem nao cobre consulta
+G-2608-0025,ok,convenio,,
+G-2608-0026,nao_enviar,convenio,SESSAO_ACIMA_LIMITE,sessao 22 de 20
+G-2608-0027,ok,convenio,DATA_NORMALIZADA;TEM_POSSIVEL_DUPLICATA,data 26/08/2026 normalizada; original do par com 0057
+G-2608-0028,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 18/08 < atendimento 27/08
+G-2608-0029,ok,convenio,,
+G-2608-0030,corrigir,convenio,AUTORIZACAO_VENCIDA;AUTORIZACAO_NOVA_NAO_LANCADA,vencida mas ha autorizacao nova anotada e nao lancada
+G-2608-0031,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 01/08 < atendimento 04/08
+G-2608-0032,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 26/07 < atendimento 19/08
+G-2608-0033,corrigir,convenio,CAMPO_OBRIGATORIO_VAZIO,sem registro profissional
+G-2608-0034,ok,convenio,SESSAO_REMARCADA,remarcada; validade 30/08 >= atendimento 24/08
+G-2608-0035,nao_enviar,particular,CONSULTA_FATURADA_PARTICULAR,Plano Bem nao cobre consulta
+G-2608-0036,ok,convenio,,
+G-2608-0037,ok,convenio,,
+G-2608-0038,ok,convenio,,
+G-2608-0039,nao_enviar,particular,PACIENTE_PEDIU_PARTICULAR,paciente pediu particular
+G-2608-0040,ok,convenio,,
+G-2608-0041,corrigir,convenio,CAMPO_OBRIGATORIO_VAZIO;AUTORIZACAO_VERBAL_SEM_NUMERO,sem numero; protocolo verbal 771203
+G-2608-0042,ok,convenio,,
+G-2608-0043,ok,convenio,,
+G-2608-0044,ok,convenio,,sessao 10 de 12
+G-2608-0045,ok,convenio,,
+G-2608-0046,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 18/08 < atendimento 24/08
+G-2608-0047,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 15/08 < atendimento 27/08
+G-2608-0048,ok,convenio,,
+G-2608-0049,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 07/08 < atendimento 21/08
+G-2608-0050,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 03/08 < atendimento 19/08
+G-2608-0051,corrigir,convenio,CAMPO_OBRIGATORIO_VAZIO,sem numero de autorizacao
+G-2608-0052,ok,convenio,,
+G-2608-0053,ok,convenio,,
+G-2608-0054,ok,convenio,,
+G-2608-0055,ok,convenio,,
+G-2608-0056,nao_enviar,convenio,SESSAO_ACIMA_LIMITE;CAMPO_OBRIGATORIO_VAZIO,sessao 14 de 12 e sem CID
+G-2608-0057,corrigir,convenio,POSSIVEL_DUPLICIDADE,repete a 0027 (lancada antes)
+G-2608-0058,ok,convenio,,
+G-2608-0059,ok,convenio,TEM_POSSIVEL_DUPLICATA,original do par com 0076
+G-2608-0060,ok,convenio,,
+G-2608-0061,corrigir,convenio,CAMPO_OBRIGATORIO_VAZIO,sem numero de autorizacao
+G-2608-0062,ok,convenio,,
+G-2608-0063,corrigir,convenio,CAMPO_OBRIGATORIO_VAZIO,sem numero de autorizacao
+G-2608-0064,nao_enviar,convenio,SESSAO_ACIMA_LIMITE,sessao 12 de 10
+G-2608-0065,ok,convenio,VALOR_NORMALIZADO,valor 62,00 lido como 62.00
+G-2608-0066,ok,convenio,,
+G-2608-0067,ok,convenio,,
+G-2608-0068,ok,convenio,,
+G-2608-0069,corrigir,convenio,PROCEDIMENTO_A_CORRIGIR,observacao diz que o procedimento realizado foi outro
+G-2608-0070,ok,convenio,,
+G-2608-0071,ok,convenio,,
+G-2608-0072,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 10/08 < atendimento 14/08
+G-2608-0073,ok,convenio,,
+G-2608-0074,ok,convenio,,sessao 12 de 12
+G-2608-0075,nao_enviar,convenio,AUTORIZACAO_VENCIDA,validade 11/08 < atendimento 13/08
+G-2608-0076,corrigir,convenio,POSSIVEL_DUPLICIDADE,repete a 0059 (lancada antes)
+G-2608-0077,nao_enviar,convenio,SESSAO_ACIMA_LIMITE,sessao 15 de 12
+G-2608-0078,ok,convenio,,
+G-2608-0079,ok,convenio,,
+G-2608-0080,ok,convenio,,
