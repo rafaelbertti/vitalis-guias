@@ -1,0 +1,96 @@
+{
+  "versao": "agosto/2026",
+  "definicoes": {
+    "autorizacao_valida": "A autorização vale até a data de validade, inclusive, comparada com a data do atendimento.",
+    "sessao_numero_na_autorizacao": "Posição desta sessão dentro da autorização. Não pode passar do limite do convênio.",
+    "prazo_envio_dias": "Dias, contados da data do atendimento, para a guia chegar ao convênio. Depois disso o convênio recusa.",
+    "valor": "Valor de referência do procedimento, em reais."
+  },
+  "procedimentos": [
+    {
+      "codigo": "50000470",
+      "descricao": "Sessão de fisioterapia musculoesquelética",
+      "valor_referencia": 62.0
+    },
+    {
+      "codigo": "50000560",
+      "descricao": "Sessão de fisioterapia neurofuncional",
+      "valor_referencia": 70.0
+    },
+    {
+      "codigo": "50000012",
+      "descricao": "Reavaliação fisioterapêutica",
+      "valor_referencia": 55.0
+    },
+    {
+      "codigo": "20103301",
+      "descricao": "Consulta ortopédica",
+      "valor_referencia": 90.0
+    },
+    {
+      "codigo": "40201015",
+      "descricao": "Infiltração articular",
+      "valor_referencia": 140.0
+    }
+  ],
+  "convenios": [
+    {
+      "nome": "Vitalcard",
+      "campos_obrigatorios": [
+        "numero_autorizacao",
+        "autorizacao_validade",
+        "profissional_registro",
+        "carteirinha",
+        "cid"
+      ],
+      "validade_maxima_autorizacao_dias": 30,
+      "limite_sessoes_por_autorizacao": 10,
+      "procedimentos_cobertos": [
+        "50000470",
+        "50000560",
+        "50000012",
+        "20103301"
+      ],
+      "prazo_envio_dias": 30,
+      "observacao": "Reavaliação médica obrigatória a cada 10 sessões; nova autorização a cada reavaliação."
+    },
+    {
+      "nome": "Saúde Interior",
+      "campos_obrigatorios": [
+        "numero_autorizacao",
+        "autorizacao_validade",
+        "profissional_registro",
+        "carteirinha"
+      ],
+      "validade_maxima_autorizacao_dias": 45,
+      "limite_sessoes_por_autorizacao": 20,
+      "procedimentos_cobertos": [
+        "50000470",
+        "50000012",
+        "20103301",
+        "40201015"
+      ],
+      "prazo_envio_dias": 45,
+      "observacao": "Aceita autorização verbal com protocolo por até 5 dias úteis, desde que o número seja lançado antes do envio."
+    },
+    {
+      "nome": "Plano Bem",
+      "campos_obrigatorios": [
+        "numero_autorizacao",
+        "autorizacao_validade",
+        "profissional_registro",
+        "carteirinha",
+        "cid"
+      ],
+      "validade_maxima_autorizacao_dias": 60,
+      "limite_sessoes_por_autorizacao": 12,
+      "procedimentos_cobertos": [
+        "50000470",
+        "50000560",
+        "50000012"
+      ],
+      "prazo_envio_dias": 30,
+      "observacao": "Não cobre consulta médica; consulta é faturada como particular."
+    }
+  ]
+}
