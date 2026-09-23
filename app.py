@@ -61,6 +61,11 @@ def pagina():
     return FileResponse(RAIZ / "public" / "index.html")
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return JSONResponse(status_code=204, content=None)
+
+
 @app.get("/api/saude")
 def saude():
     return {"ok": True, "versao": VERSAO, "guias_no_lote": len(GUIAS), "regras": REGRAS.get("versao")}
