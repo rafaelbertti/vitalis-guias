@@ -1,0 +1,651 @@
+{
+  "gerado_em": "2026-09-23T00:21",
+  "referencia": "conferência na data de lançamento de cada guia",
+  "total_verificadas": 80,
+  "com_problema": 34,
+  "por_decisao": {
+    "ok": {
+      "rotulo": "OK para enviar",
+      "guias": 46,
+      "valor": "3162.00"
+    },
+    "corrigir": {
+      "rotulo": "Corrigir antes de enviar",
+      "guias": 11,
+      "valor": "798.00"
+    },
+    "nao_enviar": {
+      "rotulo": "Não enviar ao convênio",
+      "guias": 23,
+      "valor": "1734.00"
+    }
+  },
+  "dinheiro": {
+    "valor_verificado": "5694.00",
+    "pendente_no_convenio": "2200.00",
+    "explicacao_pendente": "soma das guias em 'corrigir' e 'não enviar' que seguem no convênio; não é glosa confirmada, é o que não deve ser enviado como está",
+    "encaminhado_particular": "332.00",
+    "guias_particular": 4,
+    "excesso_possivel_duplicidade": "160.00"
+  },
+  "por_motivo": [
+    {
+      "codigo": "AUTORIZACAO_VENCIDA",
+      "guias": 13
+    },
+    {
+      "codigo": "CAMPO_OBRIGATORIO_VAZIO",
+      "guias": 8
+    },
+    {
+      "codigo": "SESSAO_ACIMA_LIMITE",
+      "guias": 6
+    },
+    {
+      "codigo": "CONSULTA_FATURADA_PARTICULAR",
+      "guias": 3
+    },
+    {
+      "codigo": "PROCEDIMENTO_NAO_COBERTO",
+      "guias": 2
+    },
+    {
+      "codigo": "POSSIVEL_DUPLICIDADE",
+      "guias": 2
+    },
+    {
+      "codigo": "AUTORIZACAO_NOVA_NAO_LANCADA",
+      "guias": 1
+    },
+    {
+      "codigo": "PACIENTE_PEDIU_PARTICULAR",
+      "guias": 1
+    },
+    {
+      "codigo": "AUTORIZACAO_VERBAL_SEM_NUMERO",
+      "guias": 1
+    },
+    {
+      "codigo": "PROCEDIMENTO_A_CORRIGIR",
+      "guias": 1
+    }
+  ],
+  "avisos": [
+    {
+      "codigo": "DATA_NORMALIZADA",
+      "guias": 2
+    },
+    {
+      "codigo": "TEM_POSSIVEL_DUPLICATA",
+      "guias": 2
+    },
+    {
+      "codigo": "SESSAO_REMARCADA",
+      "guias": 1
+    },
+    {
+      "codigo": "VALOR_NORMALIZADO",
+      "guias": 1
+    }
+  ],
+  "por_unidade": {
+    "Centro": {
+      "ok": 17,
+      "corrigir": 5,
+      "nao_enviar": 5,
+      "valor_pendente": "750.00"
+    },
+    "Norte": {
+      "ok": 16,
+      "corrigir": 2,
+      "nao_enviar": 12,
+      "valor_pendente": "1038.00"
+    },
+    "Sul": {
+      "ok": 13,
+      "corrigir": 4,
+      "nao_enviar": 6,
+      "valor_pendente": "744.00"
+    }
+  },
+  "por_convenio": {
+    "Plano Bem": {
+      "ok": 8,
+      "corrigir": 1,
+      "nao_enviar": 6,
+      "valor_pendente": "526.00"
+    },
+    "Saúde Interior": {
+      "ok": 16,
+      "corrigir": 3,
+      "nao_enviar": 6,
+      "valor_pendente": "558.00"
+    },
+    "Vitalcard": {
+      "ok": 22,
+      "corrigir": 7,
+      "nao_enviar": 11,
+      "valor_pendente": "1448.00"
+    }
+  },
+  "acoes": [
+    {
+      "id_guia": "G-2608-0002",
+      "unidade": "Sul",
+      "convenio": "Plano Bem",
+      "paciente": "P-1044",
+      "valor": "90.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "particular",
+      "motivos": [
+        "CONSULTA_FATURADA_PARTICULAR"
+      ],
+      "o_que_fazer": [
+        "Não enviar ao convênio; faturar como particular"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0004",
+      "unidade": "Norte",
+      "convenio": "Plano Bem",
+      "paciente": "P-1026",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0006",
+      "unidade": "Norte",
+      "convenio": "Vitalcard",
+      "paciente": "P-1046",
+      "valor": "140.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "PROCEDIMENTO_NAO_COBERTO",
+        "SESSAO_ACIMA_LIMITE"
+      ],
+      "o_que_fazer": [
+        "Conferir com o convênio; se não houver cobertura, combinar outra forma de cobrança",
+        "Conferir a contagem de sessões; acima do limite é preciso nova autorização"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0007",
+      "unidade": "Centro",
+      "convenio": "Vitalcard",
+      "paciente": "P-1057",
+      "valor": "140.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "PROCEDIMENTO_NAO_COBERTO"
+      ],
+      "o_que_fazer": [
+        "Conferir com o convênio; se não houver cobertura, combinar outra forma de cobrança"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0008",
+      "unidade": "Sul",
+      "convenio": "Vitalcard",
+      "paciente": "P-1036",
+      "valor": "70.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "SESSAO_ACIMA_LIMITE"
+      ],
+      "o_que_fazer": [
+        "Conferir a contagem de sessões; acima do limite é preciso nova autorização"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0014",
+      "unidade": "Sul",
+      "convenio": "Vitalcard",
+      "paciente": "P-1037",
+      "valor": "70.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0023",
+      "unidade": "Norte",
+      "convenio": "Vitalcard",
+      "paciente": "P-1028",
+      "valor": "70.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0024",
+      "unidade": "Norte",
+      "convenio": "Plano Bem",
+      "paciente": "P-1019",
+      "valor": "90.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "particular",
+      "motivos": [
+        "CONSULTA_FATURADA_PARTICULAR"
+      ],
+      "o_que_fazer": [
+        "Não enviar ao convênio; faturar como particular"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0026",
+      "unidade": "Norte",
+      "convenio": "Saúde Interior",
+      "paciente": "P-1025",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "SESSAO_ACIMA_LIMITE"
+      ],
+      "o_que_fazer": [
+        "Conferir a contagem de sessões; acima do limite é preciso nova autorização"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0028",
+      "unidade": "Norte",
+      "convenio": "Saúde Interior",
+      "paciente": "P-1042",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0031",
+      "unidade": "Centro",
+      "convenio": "Vitalcard",
+      "paciente": "P-1024",
+      "valor": "70.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0032",
+      "unidade": "Sul",
+      "convenio": "Saúde Interior",
+      "paciente": "P-1034",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0035",
+      "unidade": "Norte",
+      "convenio": "Plano Bem",
+      "paciente": "P-1014",
+      "valor": "90.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "particular",
+      "motivos": [
+        "CONSULTA_FATURADA_PARTICULAR"
+      ],
+      "o_que_fazer": [
+        "Não enviar ao convênio; faturar como particular"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0039",
+      "unidade": "Norte",
+      "convenio": "Vitalcard",
+      "paciente": "P-1022",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "particular",
+      "motivos": [
+        "PACIENTE_PEDIU_PARTICULAR"
+      ],
+      "o_que_fazer": [
+        "Faturar como particular e não enviar ao convênio"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0046",
+      "unidade": "Norte",
+      "convenio": "Vitalcard",
+      "paciente": "P-1024",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0047",
+      "unidade": "Sul",
+      "convenio": "Saúde Interior",
+      "paciente": "P-1047",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0049",
+      "unidade": "Norte",
+      "convenio": "Saúde Interior",
+      "paciente": "P-1055",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0050",
+      "unidade": "Centro",
+      "convenio": "Vitalcard",
+      "paciente": "P-1036",
+      "valor": "70.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0056",
+      "unidade": "Centro",
+      "convenio": "Plano Bem",
+      "paciente": "P-1028",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "SESSAO_ACIMA_LIMITE",
+        "CAMPO_OBRIGATORIO_VAZIO"
+      ],
+      "o_que_fazer": [
+        "Conferir a contagem de sessões; acima do limite é preciso nova autorização",
+        "Preencher 'cid' antes do envio"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0064",
+      "unidade": "Norte",
+      "convenio": "Vitalcard",
+      "paciente": "P-1036",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "SESSAO_ACIMA_LIMITE"
+      ],
+      "o_que_fazer": [
+        "Conferir a contagem de sessões; acima do limite é preciso nova autorização"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0072",
+      "unidade": "Centro",
+      "convenio": "Saúde Interior",
+      "paciente": "P-1035",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0075",
+      "unidade": "Sul",
+      "convenio": "Vitalcard",
+      "paciente": "P-1054",
+      "valor": "90.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA"
+      ],
+      "o_que_fazer": [
+        "Obter nova autorização junto ao convênio antes de enviar"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0077",
+      "unidade": "Norte",
+      "convenio": "Plano Bem",
+      "paciente": "P-1042",
+      "valor": "62.00",
+      "decisao": "nao_enviar",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "SESSAO_ACIMA_LIMITE"
+      ],
+      "o_que_fazer": [
+        "Conferir a contagem de sessões; acima do limite é preciso nova autorização"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0013",
+      "unidade": "Norte",
+      "convenio": "Vitalcard",
+      "paciente": "P-1005",
+      "valor": "90.00",
+      "decisao": "corrigir",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "CAMPO_OBRIGATORIO_VAZIO"
+      ],
+      "o_que_fazer": [
+        "Preencher 'profissional_registro' antes do envio"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0021",
+      "unidade": "Norte",
+      "convenio": "Vitalcard",
+      "paciente": "P-1005",
+      "valor": "62.00",
+      "decisao": "corrigir",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "CAMPO_OBRIGATORIO_VAZIO"
+      ],
+      "o_que_fazer": [
+        "Preencher 'cid' antes do envio"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0030",
+      "unidade": "Sul",
+      "convenio": "Vitalcard",
+      "paciente": "P-1044",
+      "valor": "70.00",
+      "decisao": "corrigir",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "AUTORIZACAO_VENCIDA",
+        "AUTORIZACAO_NOVA_NAO_LANCADA"
+      ],
+      "o_que_fazer": [
+        "Lançar a autorização nova (número e validade) e conferir de novo",
+        "Lançar o número e a validade da autorização nova e conferir de novo"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0033",
+      "unidade": "Centro",
+      "convenio": "Vitalcard",
+      "paciente": "P-1019",
+      "valor": "70.00",
+      "decisao": "corrigir",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "CAMPO_OBRIGATORIO_VAZIO"
+      ],
+      "o_que_fazer": [
+        "Preencher 'profissional_registro' antes do envio"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0041",
+      "unidade": "Centro",
+      "convenio": "Saúde Interior",
+      "paciente": "P-1026",
+      "valor": "62.00",
+      "decisao": "corrigir",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "CAMPO_OBRIGATORIO_VAZIO",
+        "AUTORIZACAO_VERBAL_SEM_NUMERO"
+      ],
+      "o_que_fazer": [
+        "Preencher 'numero_autorizacao' antes do envio",
+        "Obter o número da autorização junto ao convênio e lançar na guia"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0051",
+      "unidade": "Centro",
+      "convenio": "Saúde Interior",
+      "paciente": "P-1035",
+      "valor": "62.00",
+      "decisao": "corrigir",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "CAMPO_OBRIGATORIO_VAZIO"
+      ],
+      "o_que_fazer": [
+        "Preencher 'numero_autorizacao' antes do envio"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0057",
+      "unidade": "Sul",
+      "convenio": "Vitalcard",
+      "paciente": "P-1051",
+      "valor": "90.00",
+      "decisao": "corrigir",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "POSSIVEL_DUPLICIDADE"
+      ],
+      "o_que_fazer": [
+        "Confirmar se é a mesma sessão da guia G-2608-0027; se for, cancelar esta"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0061",
+      "unidade": "Centro",
+      "convenio": "Saúde Interior",
+      "paciente": "P-1058",
+      "valor": "62.00",
+      "decisao": "corrigir",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "CAMPO_OBRIGATORIO_VAZIO"
+      ],
+      "o_que_fazer": [
+        "Preencher 'numero_autorizacao' antes do envio"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0063",
+      "unidade": "Sul",
+      "convenio": "Plano Bem",
+      "paciente": "P-1021",
+      "valor": "70.00",
+      "decisao": "corrigir",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "CAMPO_OBRIGATORIO_VAZIO"
+      ],
+      "o_que_fazer": [
+        "Preencher 'numero_autorizacao' antes do envio"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0069",
+      "unidade": "Centro",
+      "convenio": "Vitalcard",
+      "paciente": "P-1036",
+      "valor": "90.00",
+      "decisao": "corrigir",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "PROCEDIMENTO_A_CORRIGIR"
+      ],
+      "o_que_fazer": [
+        "Confirmar o procedimento realizado, corrigir código, cobertura e valor"
+      ]
+    },
+    {
+      "id_guia": "G-2608-0076",
+      "unidade": "Sul",
+      "convenio": "Vitalcard",
+      "paciente": "P-1052",
+      "valor": "70.00",
+      "decisao": "corrigir",
+      "encaminhamento": "convenio",
+      "motivos": [
+        "POSSIVEL_DUPLICIDADE"
+      ],
+      "o_que_fazer": [
+        "Confirmar se é a mesma sessão da guia G-2608-0059; se for, cancelar esta"
+      ]
+    }
+  ]
+}

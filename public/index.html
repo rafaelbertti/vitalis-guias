@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conferência de guias — Clínica Vitalis</title>
+<style>
+  :root { --ok:#1b7f3b; --corrigir:#b26a00; --nao:#b3261e; --cinza:#666; --borda:#ddd; --fundo:#f7f7f5; }
+  * { box-sizing: border-box; }
+  body { font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--fundo); color: #1a1a1a; }
+  header { background: #fff; border-bottom: 1px solid var(--borda); padding: 14px 24px; display:flex; gap:16px; align-items:baseline; flex-wrap:wrap; }
+  header h1 { font-size: 18px; margin: 0; }
+  header small { color: var(--cinza); }
+  main { max-width: 1280px; margin: 0 auto; padding: 16px 24px 48px; }
+  section { background:#fff; border:1px solid var(--borda); border-radius:8px; padding:16px 20px; margin-bottom:16px; }
+  h2 { font-size: 16px; margin: 0 0 12px; }
+  .cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap:10px; margin-bottom:12px; }
+  .card { border:1px solid var(--borda); border-radius:6px; padding:10px 12px; }
+  .card b { display:block; font-size:22px; }
+  .card span { color: var(--cinza); font-size: 13px; }
+  .card.ok b { color: var(--ok); } .card.corrigir b { color: var(--corrigir); } .card.nao_enviar b { color: var(--nao); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid #eee; vertical-align: top; }
+  th { background:#fafafa; position: sticky; top: 0; cursor: pointer; }
+  tr.linha { cursor: pointer; }
+  tr.linha:hover { background:#fcfcf9; }
+  tr.detalhe td { background:#fbfbf8; padding: 8px 8px 12px 24px; }
+  .tag { display:inline-block; padding:1px 8px; border-radius: 10px; font-size:12px; font-weight:600; color:#fff; white-space:nowrap; }
+  .tag.ok { background: var(--ok); } .tag.corrigir { background: var(--corrigir); } .tag.nao_enviar { background: var(--nao); }
+  .tag.particular { background:#5b4b8a; }
+  .grav { font-size: 11px; padding:0 6px; border-radius:8px; border:1px solid var(--borda); color: var(--cinza); margin-right: 4px; }
+  .filtros { display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 10px; align-items:center; }
+  .filtros input, .filtros select, form input, form select, textarea { font: inherit; padding:5px 8px; border:1px solid #bbb; border-radius:5px; }
+  form { display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:8px 12px; }
+  form label { display:flex; flex-direction:column; font-size:12.5px; color:var(--cinza); gap:2px; }
+  form label.larga { grid-column: 1 / -1; }
+  button { font: inherit; padding:7px 14px; border-radius:6px; border:1px solid #2b2b2b; background:#2b2b2b; color:#fff; cursor:pointer; }
+  button.sec { background:#fff; color:#2b2b2b; }
+  .resultado { margin-top: 12px; border-left: 4px solid var(--borda); padding: 8px 12px; background:#fafafa; }
+  .resultado.ok { border-color: var(--ok); } .resultado.corrigir { border-color: var(--corrigir); } .resultado.nao_enviar { border-color: var(--nao); }
+  pre { background:#f2f2ee; padding:8px 10px; border-radius:6px; overflow:auto; font-size:12.5px; }
+  .muted { color: var(--cinza); font-size: 13px; }
+  .duas { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 800px) { .duas { grid-template-columns: 1fr; } }
+  ul.acoes { padding-left: 18px; margin: 4px 0; }
+  a { color: #1a4fa3; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Conferência de guias de convênio — Clínica Vitalis</h1>
+  <small id="versao">carregando…</small>
+  <small><a href="/api/relatorio.md" target="_blank">relatório em Markdown</a> · <a href="/docs" target="_blank">API</a> · <a href="https://github.com/rafaelbertti/vitalis-guias" target="_blank">repositório</a></small>
+</header>
+<main>
+
+<section id="relatorio">
+  <h2>Relatório de terça — Dr. Renato</h2>
+  <div class="cards" id="cards"></div>
+  <div class="duas">
+    <div>
+      <h3 class="muted" style="margin:6px 0">Por tipo de problema</h3>
+      <table id="tab-motivos"><thead><tr><th>Motivo</th><th>Guias</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div>
+      <h3 class="muted" style="margin:6px 0">Por unidade e convênio</h3>
+      <table id="tab-grupos"><thead><tr><th></th><th>OK</th><th>Corrigir</th><th>Não enviar</th><th>Pendente</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+  <p class="muted" id="rel-nota"></p>
+</section>
+
+<section id="lista">
+  <h2>As guias de agosto</h2>
+  <div class="filtros">
+    <input id="busca" placeholder="buscar (guia, paciente, profissional, motivo)…" size="40">
+    <select id="f-decisao"><option value="">todas as situações</option><option value="ok">OK</option><option value="corrigir">Corrigir</option><option value="nao_enviar">Não enviar</option></select>
+    <select id="f-convenio"><option value="">todos os convênios</option></select>
+    <select id="f-unidade"><option value="">todas as unidades</option></select>
+    <span class="muted" id="contagem"></span>
+  </div>
+  <table id="tab-guias">
+    <thead><tr><th data-k="id_guia">Guia</th><th data-k="unidade">Unidade</th><th data-k="data_atendimento">Atendimento</th><th data-k="paciente">Paciente</th><th data-k="convenio">Convênio</th><th data-k="procedimento_descricao">Procedimento</th><th data-k="valor">Valor</th><th data-k="decisao">Situação</th><th>Motivos</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <p class="muted">Clique numa guia para ver os motivos completos e o que corrigir.</p>
+</section>
+
+<section id="nova">
+  <h2>Guia nova: entra aqui e a decisão sai</h2>
+  <p class="muted">Preencha como a recepção lança no sistema. O mesmo caminho existe por API: <code>POST /api/verificar</code> com estas colunas em JSON (veja o README). A guia é comparada com o lote de agosto para duplicidade e não é gravada.</p>
+  <form id="form-guia"></form>
+  <p style="margin:10px 0 0">
+    <button type="submit" form="form-guia">Verificar guia</button>
+    <button type="button" class="sec" id="btn-exemplo">Preencher exemplo</button>
+    <button type="button" class="sec" id="btn-limpar">Limpar</button>
+  </p>
+  <div id="res-guia"></div>
+</section>
+
+<section id="lote">
+  <h2>Lote em CSV (exportação do sistema de gestão)</h2>
+  <p class="muted">Cole o CSV com o mesmo cabeçalho de <code>guias.csv</code> ou escolha o arquivo. Vai para <code>POST /api/verificar-lote</code>.</p>
+  <input type="file" id="arquivo" accept=".csv,text/csv"> <button type="button" class="sec" id="btn-lote">Verificar lote</button>
+  <textarea id="csv" rows="5" style="width:100%; margin-top:8px" placeholder="id_guia,unidade,data_atendimento,..."></textarea>
+  <div id="res-lote"></div>
+</section>
+
+</main>
+<script>
+const COLUNAS = ["id_guia","unidade","data_atendimento","paciente","convenio","carteirinha","cid","procedimento_codigo","procedimento_descricao","numero_autorizacao","autorizacao_validade","autorizacao_sessoes_limite","sessao_numero_na_autorizacao","profissional","profissional_registro","valor","observacao_recepcao","data_lancamento"];
+const ROTULO = {ok:"OK", corrigir:"Corrigir", nao_enviar:"Não enviar"};
+const brl = v => "R$ " + Number(v||0).toLocaleString("pt-BR",{minimumFractionDigits:2});
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let GUIAS = [], ordem = {k:"id_guia", asc:true};
+
+async function api(url, opts) {
+  const r = await fetch(url, opts);
+  const corpo = await r.json().catch(() => ({erro: "resposta não é JSON"}));
+  if (!r.ok) throw new Error(typeof corpo.detail === "string" ? corpo.detail : JSON.stringify(corpo.detail || corpo));
+  return corpo;
+}
+
+function tagDecisao(r) {
+  return `<span class="tag ${r.decisao}">${ROTULO[r.decisao]}</span>` + (r.encaminhamento === "particular" ? ` <span class="tag particular">particular</span>` : "");
+}
+function motivosHtml(r, completo) {
+  const ms = completo ? r.motivos : r.motivos.filter(m => m.gravidade === "bloqueia" || m.gravidade === "corrigir");
+  if (!ms.length) return `<span class="muted">${completo ? "sem motivos" : "—"}</span>`;
+  if (!completo) return ms.map(m => `<code>${m.codigo}</code>`).join(" ");
+  return `<ul class="acoes">` + ms.map(m => `<li><span class="grav">${m.gravidade}</span><b>${m.codigo}</b> — ${esc(m.mensagem)}${m.correcao ? `<br><span class="muted">→ ${esc(m.correcao)}</span>` : ""}</li>`).join("") + `</ul>`;
+}
+function resultadoHtml(r) {
+  return `<div class="resultado ${r.decisao}"><b>${esc(r.id_guia)}</b> ${tagDecisao(r)} <span class="muted">· referência ${r.data_referencia} · ${esc(r.versao_regras)}</span>${motivosHtml(r, true)}</div>`;
+}
+
+async function carregarRelatorio() {
+  const rel = await api("/api/relatorio");
+  const d = rel.por_decisao, din = rel.dinheiro;
+  document.getElementById("cards").innerHTML = `
+    <div class="card"><b>${rel.total_verificadas}</b><span>guias verificadas</span></div>
+    <div class="card ok"><b>${d.ok.guias}</b><span>OK para enviar · ${brl(d.ok.valor)}</span></div>
+    <div class="card corrigir"><b>${d.corrigir.guias}</b><span>corrigir antes · ${brl(d.corrigir.valor)}</span></div>
+    <div class="card nao_enviar"><b>${d.nao_enviar.guias}</b><span>não enviar · ${brl(d.nao_enviar.valor)}</span></div>
+    <div class="card nao_enviar"><b>${brl(din.pendente_no_convenio)}</b><span>pendente no convênio (não enviar como está)</span></div>
+    <div class="card"><b>${brl(din.encaminhado_particular)}</b><span>encaminhado para particular (${din.guias_particular})</span></div>
+    <div class="card"><b>${brl(din.excesso_possivel_duplicidade)}</b><span>possível duplicidade</span></div>`;
+  document.querySelector("#tab-motivos tbody").innerHTML = rel.por_motivo.map(m => `<tr><td><code>${m.codigo}</code></td><td>${m.guias}</td></tr>`).join("");
+  const linhas = [];
+  for (const [nome, v] of Object.entries(rel.por_unidade)) linhas.push(`<tr><td>Unidade ${esc(nome)}</td><td>${v.ok}</td><td>${v.corrigir}</td><td>${v.nao_enviar}</td><td>${brl(v.valor_pendente)}</td></tr>`);
+  for (const [nome, v] of Object.entries(rel.por_convenio)) linhas.push(`<tr><td>${esc(nome)}</td><td>${v.ok}</td><td>${v.corrigir}</td><td>${v.nao_enviar}</td><td>${brl(v.valor_pendente)}</td></tr>`);
+  document.querySelector("#tab-grupos tbody").innerHTML = linhas.join("");
+  document.getElementById("rel-nota").textContent = `Gerado em ${rel.gerado_em.replace("T"," ")} · ${rel.referencia}. "Pendente" não é glosa confirmada: é o que não deve ser enviado como está.`;
+}
+
+async function carregarGuias() {
+  const dados = await api("/api/guias");
+  GUIAS = dados.guias;
+  const opc = (id, valores) => { const s = document.getElementById(id); [...new Set(valores)].sort().forEach(v => s.insertAdjacentHTML("beforeend", `<option>${esc(v)}</option>`)); };
+  opc("f-convenio", GUIAS.map(g => g.convenio)); opc("f-unidade", GUIAS.map(g => g.unidade));
+  desenharTabela();
+}
+function desenharTabela() {
+  const q = document.getElementById("busca").value.toLowerCase();
+  const fd = document.getElementById("f-decisao").value, fc = document.getElementById("f-convenio").value, fu = document.getElementById("f-unidade").value;
+  let lista = GUIAS.filter(g => (!fd || g.resultado.decisao === fd) && (!fc || g.convenio === fc) && (!fu || g.unidade === fu)
+    && (!q || [g.id_guia, g.paciente, g.profissional, g.procedimento_descricao, g.observacao_recepcao, ...g.resultado.motivos.map(m => m.codigo)].join(" ").toLowerCase().includes(q)));
+  const k = ordem.k;
+  lista.sort((a, b) => { const va = k === "decisao" ? a.resultado.decisao : k === "valor" ? Number(a.resultado.valor) : a[k]; const vb = k === "decisao" ? b.resultado.decisao : k === "valor" ? Number(b.resultado.valor) : b[k]; return (va > vb ? 1 : va < vb ? -1 : 0) * (ordem.asc ? 1 : -1); });
+  document.getElementById("contagem").textContent = `${lista.length} de ${GUIAS.length}`;
+  document.querySelector("#tab-guias tbody").innerHTML = lista.map(g => `
+    <tr class="linha" data-id="${esc(g.id_guia)}"><td>${esc(g.id_guia)}</td><td>${esc(g.unidade)}</td><td>${esc(g.data_atendimento)}</td><td>${esc(g.paciente)}</td><td>${esc(g.convenio)}</td><td>${esc(g.procedimento_descricao)}</td><td>${esc(g.valor)}</td><td>${tagDecisao(g.resultado)}</td><td>${motivosHtml(g.resultado, false)}</td></tr>`).join("");
+}
+document.querySelector("#tab-guias tbody").addEventListener("click", ev => {
+  const tr = ev.target.closest("tr.linha"); if (!tr) return;
+  const prox = tr.nextElementSibling;
+  if (prox && prox.classList.contains("detalhe")) { prox.remove(); return; }
+  const g = GUIAS.find(x => x.id_guia === tr.dataset.id);
+  tr.insertAdjacentHTML("afterend", `<tr class="detalhe"><td colspan="9">${motivosHtml(g.resultado, true)}<div class="muted">Autorização ${esc(g.numero_autorizacao) || "—"} válida até ${esc(g.autorizacao_validade)} · sessão ${esc(g.sessao_numero_na_autorizacao)} de ${esc(g.autorizacao_sessoes_limite)} · CID ${esc(g.cid) || "—"} · ${esc(g.profissional)} ${esc(g.profissional_registro)} · lançada em ${esc(g.data_lancamento)}${g.observacao_recepcao ? ` · obs.: “${esc(g.observacao_recepcao)}”` : ""} · referência ${g.resultado.data_referencia}</div></td></tr>`);
+});
+["busca","f-decisao","f-convenio","f-unidade"].forEach(id => document.getElementById(id).addEventListener("input", desenharTabela));
+document.querySelectorAll("#tab-guias th[data-k]").forEach(th => th.addEventListener("click", () => { const k = th.dataset.k; ordem = {k, asc: ordem.k === k ? !ordem.asc : true}; desenharTabela(); }));
+
+// formulário de guia nova
+const form = document.getElementById("form-guia");
+form.innerHTML = COLUNAS.map(c => `<label class="${c === "observacao_recepcao" ? "larga" : ""}">${c}<input name="${c}" ${c === "id_guia" ? "required" : ""}></label>`).join("");
+const EXEMPLO = {id_guia:"G-2609-0001", unidade:"Centro", data_atendimento:"2026-09-22", paciente:"P-1099", convenio:"Vitalcard", carteirinha:"555000111", cid:"M54.5", procedimento_codigo:"50000470", procedimento_descricao:"Sessão de fisioterapia musculoesquelética", numero_autorizacao:"AUT999001", autorizacao_validade:"2026-09-30", autorizacao_sessoes_limite:"10", sessao_numero_na_autorizacao:"11", profissional:"Camila Torres", profissional_registro:"CREFITO-3 176590-F", valor:"62,00", observacao_recepcao:"Paciente trouxe autorização nova, número ainda não lançado.", data_lancamento:"2026-09-22"};
+document.getElementById("btn-exemplo").onclick = () => { for (const c of COLUNAS) form.elements[c].value = EXEMPLO[c] ?? ""; };
+document.getElementById("btn-limpar").onclick = () => { form.reset(); document.getElementById("res-guia").innerHTML = ""; };
+form.addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const guia = {}; for (const c of COLUNAS) guia[c] = form.elements[c].value;
+  const alvo = document.getElementById("res-guia");
+  alvo.innerHTML = `<p class="muted">verificando…</p>`;
+  try { const r = await api("/api/verificar", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(guia)});
+        alvo.innerHTML = resultadoHtml(r) + `<details><summary class="muted">resposta JSON</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details>`; }
+  catch (e) { alvo.innerHTML = `<div class="resultado nao_enviar">Erro: ${esc(e.message)}</div>`; }
+});
+
+// lote CSV
+document.getElementById("arquivo").addEventListener("change", async ev => { const f = ev.target.files[0]; if (f) document.getElementById("csv").value = await f.text(); });
+document.getElementById("btn-lote").onclick = async () => {
+  const alvo = document.getElementById("res-lote"); alvo.innerHTML = `<p class="muted">verificando…</p>`;
+  try {
+    const r = await api("/api/verificar-lote", {method:"POST", headers:{"Content-Type":"text/csv"}, body: document.getElementById("csv").value});
+    const d = r.relatorio.por_decisao;
+    alvo.innerHTML = `<p><b>${r.total}</b> guias: ${d.ok.guias} OK, ${d.corrigir.guias} corrigir, ${d.nao_enviar.guias} não enviar · pendente no convênio ${brl(r.relatorio.dinheiro.pendente_no_convenio)}</p>` + r.resultados.map(resultadoHtml).join("");
+  } catch (e) { alvo.innerHTML = `<div class="resultado nao_enviar">Erro: ${esc(e.message)}</div>`; }
+};
+
+(async () => {
+  try { const s = await api("/api/saude"); document.getElementById("versao").textContent = `v${s.versao} · regras ${s.regras} · ${s.guias_no_lote} guias no lote`; } catch (e) {}
+  try { await Promise.all([carregarRelatorio(), carregarGuias()]); }
+  catch (e) { document.getElementById("cards").innerHTML = `<div class="resultado nao_enviar">Não consegui carregar: ${esc(e.message)}</div>`; }
+})();
+</script>
+</body>
+</html>
